@@ -1,0 +1,58 @@
+{
+  "manifest_version": "0.2",
+  "name": "cin7-omni",
+  "display_name": "Cin7 Omni",
+  "version": "1.0.0",
+  "description": "Full Cin7 Omni access from Claude: contacts, products, stock, sales orders, purchase orders, quotes, credit notes, payments, adjustments, transfers, BOMs, production jobs and more — every resource the Cin7 Omni API exposes.",
+  "author": {
+    "name": "Polysleep"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Panagiotis1226/Cin7-Omni-MCP"
+  },
+  "license": "MIT",
+  "keywords": ["cin7", "cin7-omni", "inventory", "sales-orders", "purchasing", "stock"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.cjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.cjs"],
+      "env": {
+        "CIN7_API_USERNAME": "${user_config.api_username}",
+        "CIN7_API_KEY": "${user_config.api_key}",
+        "CIN7_READ_ONLY": "${user_config.read_only}"
+      }
+    }
+  },
+  "user_config": {
+    "api_username": {
+      "type": "string",
+      "title": "Cin7 API Username",
+      "description": "The API connection username from Cin7 Omni (Settings → Integrations → API v1 → your connection). Not your Cin7 login.",
+      "required": true
+    },
+    "api_key": {
+      "type": "string",
+      "title": "Cin7 API Key",
+      "description": "The API connection key that pairs with the username above.",
+      "sensitive": true,
+      "required": true
+    },
+    "read_only": {
+      "type": "boolean",
+      "title": "Read-only mode",
+      "description": "When enabled, Claude can only look up data — the create/update/delete tools are not exposed at all.",
+      "required": false,
+      "default": false
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

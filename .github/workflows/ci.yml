@@ -16,3 +16,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - run: npx -y @anthropic-ai/mcpb validate manifest.json
