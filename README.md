@@ -28,12 +28,13 @@ In Cin7 Omni: **Settings (⚙) → Integrations → API v1 → Add API Connectio
 
 ### 2. Install
 
+A prebuilt, self-contained server ships in the repo (`dist/index.js` — all dependencies bundled in), so cloning is enough to run it: no `npm install`, no build step. `git pull` always gets you the latest ready-to-test build.
+
 ```bash
 git clone https://github.com/panagiotis1226/cin7-omni-mcp.git
-cd cin7-omni-mcp
-npm install
-npm run build
 ```
+
+Only if you edit the source yourself: `npm install` (which auto-builds) or `npm run build` to rebuild `dist/index.js`.
 
 ### 3. Connect to Claude
 
