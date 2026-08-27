@@ -1,0 +1,13 @@
+# Keep the installable bundle to just the manifest, server and docs.
+.git
+.github
+.gitignore
+.mcpbignore
+node_modules
+src
+test
+scripts
+dist
+package.json
+package-lock.json
+tsconfig.json

@@ -20,25 +20,36 @@ The verb matrix (which resources can be listed, fetched, created, updated or del
 
 Reads and writes are separate tools with proper MCP annotations (`readOnlyHint`, `destructiveHint`), so in Claude you can set each write tool to **Always allow**, **Ask each time**, or **Deny** independently of reads.
 
-## Setup
+## Install in Claude Desktop (3 steps, no config editing)
 
-### 1. Get Cin7 Omni API credentials
+1. **Get your Cin7 API credentials** — in Cin7 Omni: **Settings (⚙) → Integrations → API v1 → Add API Connection**. This gives you an **API Username** and **API Key** (Basic-auth credentials, not your Cin7 login). Grant the connection permission to the modules you want Claude to reach — a module without permission returns 403.
+2. **Download** [`dist/cin7-omni.mcpb`](dist/cin7-omni.mcpb) — one file, ~150 KB.
+3. **Open it** — double-click the file (or in Claude Desktop: Settings → Extensions → drag the file in) and click **Install**. Paste the API Username and API Key when prompted; the key is stored in your computer's keychain, never in a file. There's also a **Read-only mode** toggle if you want Claude locked to lookups only.
 
-In Cin7 Omni: **Settings (⚙) → Integrations → API v1 → Add API Connection**. This gives you an **API Username** and **API Key** (this is Basic-auth credentials, not your Cin7 login). Grant the connection permission to the modules you want Claude to reach — a module without permission returns 403.
+Then ask Claude something like *"describe the Cin7 SalesOrders resource"* to confirm it works.
 
-### 2. Install
+To remove it later: Claude Desktop → Settings → Extensions → Cin7 Omni → Uninstall.
 
-A prebuilt, self-contained server ships in the repo (`dist/index.js` — all dependencies bundled in), so cloning is enough to run it: no `npm install`, no build step. `git pull` always gets you the latest ready-to-test build.
+## Other ways to run it
+
+A prebuilt, self-contained server also ships in the repo (`dist/index.js` — all dependencies bundled in), so cloning is enough to run it: no `npm install`, no build step. `git pull` always gets you the latest ready-to-test build.
 
 ```bash
 git clone https://github.com/panagiotis1226/cin7-omni-mcp.git
 ```
 
-Only if you edit the source yourself: `npm install` (which auto-builds) or `npm run build` to rebuild `dist/index.js`.
+Only if you edit the source yourself: `npm install` (which auto-builds) or `npm run build` to rebuild.
 
-### 3. Connect to Claude
+**Claude Code**:
 
-**Claude Desktop** — add to `claude_desktop_config.json` (Settings → Developer → Edit Config):
+```bash
+claude mcp add cin7-omni \
+  -e CIN7_API_USERNAME=YourApiUsername \
+  -e CIN7_API_KEY=your-api-key \
+  -- node /absolute/path/to/cin7-omni-mcp/dist/index.js
+```
+
+**Claude Desktop (manual config)** — add to `claude_desktop_config.json` (Settings → Developer → Edit Config):
 
 ```json
 {
@@ -53,15 +64,6 @@ Only if you edit the source yourself: `npm install` (which auto-builds) or `npm 
     }
   }
 }
-```
-
-**Claude Code**:
-
-```bash
-claude mcp add cin7-omni \
-  -e CIN7_API_USERNAME=YourApiUsername \
-  -e CIN7_API_KEY=your-api-key \
-  -- node /absolute/path/to/cin7-omni-mcp/dist/index.js
 ```
 
 ### Environment variables
@@ -94,9 +96,12 @@ Cin7 enforces **3 calls/second, 60/minute, 5,000/day**. The server queues reques
 ## Development
 
 ```bash
-npm test          # builds, then runs the stdio smoke test against a mock Cin7 API
-npm run dev       # run from source with tsx
+npm test           # builds, then runs the stdio smoke test against a mock Cin7 API
+npm run build:mcpb # rebuild + validate manifest + repack dist/cin7-omni.mcpb
+npm run dev        # run from source with tsx
 ```
+
+The build emits two bundles from the same source: `dist/index.js` (ESM, for clone-and-run / Claude Code) and `server/index.cjs` (CJS, packed into the `.mcpb` extension).
 
 `src/fieldReference.ts` is generated from Cin7's official swagger spec by `scripts/gen_fields.py` (expects `swagger.json` from `https://api.cin7.com/api/swagger/v1/swagger.json` in the working directory) — regenerate if Cin7 updates their API.
 
