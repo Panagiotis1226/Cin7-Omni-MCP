@@ -1,0 +1,42 @@
+{
+  "name": "cin7-omni-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for the Cin7 Omni API — gives Claude full access to Contacts, Products, Stock, Sales Orders, Purchase Orders, and every other Cin7 Omni v1 API resource.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "cin7-omni-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', 0o755)\"",
+    "clean": "rm -rf dist",
+    "test": "npm run build && node test/smoke.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "cin7",
+    "cin7-omni",
+    "inventory",
+    "claude"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
